@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">UploadDemoV2</string>
+    <string name="camera_dialog_title">Permission denied</string>
+    <string name="server_client_id">324377150289-npallundu26sc3olo23i80o3qja3r5fh.apps.googleusercontent.com</string>
+</resources>

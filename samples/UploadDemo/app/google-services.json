@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "324377150289",
+    "project_id": "weather-appv2"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:324377150289:android:c420f9a5d660511c",
+        "android_client_info": {
+          "package_name": "com.example.android.uploaddemov2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "324377150289-5so5c0uqbgl53ntpijsm3rqumfufcvm8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.android.uploaddemov2",
+            "certificate_hash": "0b864514d4d471a45800db54673e609ffe415c78"
+          }
+        },
+        {
+          "client_id": "324377150289-npallundu26sc3olo23i80o3qja3r5fh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAI-uvVj7KFGOYXMqI15WY2mPoHcSXNi8c"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
