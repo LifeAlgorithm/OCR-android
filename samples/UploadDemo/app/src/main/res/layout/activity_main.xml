@@ -14,19 +14,39 @@
         android:layout_height="wrap_content"
         />
 
-    <ImageView
-        android:layout_width="300dp"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
-        android:id="@+id/imageView"
-        android:visibility="gone"
-        android:layout_below="@id/sign_in_button"/>
+        android:id="@+id/pictureLayout"
+        android:layout_below="@id/sign_in_button"
+        android:gravity="center_horizontal"
+        android:layout_margin="20dp"
+        android:visibility="gone">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:id="@+id/imageView"
+            android:visibility="gone"/>
+        <!--   -->
+        <ProgressBar
+            android:id="@+id/loading_indicator"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            >
+        </ProgressBar>
+
+    </RelativeLayout>
+
+
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView"
+        android:layout_below="@+id/pictureLayout"
         android:text="Take a picture"
         android:layout_marginTop="10dp"
         android:id="@+id/pictureBtn"/>
@@ -47,24 +67,37 @@
         android:layout_marginTop="10dp"
         android:id="@+id/uploadBtn"/>
 
-    <TextView
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/uploadBtn"
-        tools:text="OCR Results"
-        android:layout_marginTop="10dp"
-        android:scrollbars = "vertical"
-        android:maxLines="15"
-        android:layout_centerHorizontal="true"
         android:id="@+id/ocrDisplay"
-        android:visibility="gone"/>
+        android:layout_below="@id/uploadBtn"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="OCR Results:"
+            android:layout_marginTop="10dp"
+            android:id="@+id/ocrLabel"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="OCR Text"
+            android:layout_marginTop="10dp"
+            android:scrollbars = "vertical"
+            android:maxLines="15"
+            android:id="@+id/ocrText"
+            />
+
+    </LinearLayout>
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/ocrDisplay"
         android:text="Not logged in"
         android:layout_marginTop="10dp"
         android:id="@+id/logInDisplay"/>
-
 </RelativeLayout>

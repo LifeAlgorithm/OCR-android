@@ -53,7 +53,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SignInButton signInButton;
     private ImageView imgView;
     private TextView logInDisplay;
-    private TextView ocrDisplay;
+    private View ocrDisplay;
+    private TextView ocrText;
+    private TextView ocrLabel;
+    private View mloadingIndicator;
+    private View pictureLayout;
 
     private final int SELECT_IMG_REQUEST = 1;
     private static final int REQUEST_TAKE_PHOTO = 9002;
@@ -87,8 +91,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         imgView = (ImageView) findViewById(R.id.imageView);
         logInDisplay = (TextView) findViewById(R.id.logInDisplay);
-        ocrDisplay = (TextView) findViewById(R.id.ocrDisplay);
-        ocrDisplay.setMovementMethod(new ScrollingMovementMethod());
+        ocrDisplay = findViewById(R.id.ocrDisplay);
+        ocrText = (TextView) findViewById(R.id.ocrText);
+        ocrLabel = (TextView)findViewById(R.id.ocrLabel);
+        ocrText.setMovementMethod(new ScrollingMovementMethod());
+
+        pictureLayout = findViewById(R.id.pictureLayout);
+        mloadingIndicator = findViewById(R.id.loading_indicator);
+
 
         signInButton = (SignInButton) findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
@@ -96,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         PictureBtn.setOnClickListener(this);
         SelectBtn.setOnClickListener(this);
         UploadBtn.setOnClickListener(this);
+        UploadBtn.setEnabled(false);
         signInButton.setOnClickListener(this);
 
         Log.i(LOG_TAG, "SDK: " + Build.VERSION.SDK_INT);
@@ -236,10 +247,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             try {
                 mBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), path);
                 imgView.setImageBitmap(mBitmap);
+                pictureLayout.setVisibility(View.VISIBLE);
                 imgView.setVisibility(View.VISIBLE);
+
+                ocrText.setVisibility(View.GONE);
+                ocrLabel.setVisibility(View.GONE);
                 ocrDisplay.setVisibility(View.GONE);
+
+
                 selectedPhotoMode = true;
                 snapshotPhotoMode = false;
+
+                UploadBtn.setEnabled(true);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -258,10 +277,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 try {
                     mBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), currentPhotoUri);
                     imgView.setImageBitmap(mBitmap);
+                    pictureLayout.setVisibility(View.VISIBLE);
                     imgView.setVisibility(View.VISIBLE);
+
+                    ocrText.setVisibility(View.GONE);
+                    ocrLabel.setVisibility(View.GONE);
                     ocrDisplay.setVisibility(View.GONE);
+
                     selectedPhotoMode = false;
                     snapshotPhotoMode = true;
+
+                    UploadBtn.setEnabled(true);
 
 
                 } catch (IOException e) {
@@ -316,9 +342,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                             Toast.makeText(MainActivity.this, "Image uploaded to server.", Toast.LENGTH_LONG).show();
                             imgView.setImageResource(0);
+                            mloadingIndicator.setVisibility(View.GONE);
                             imgView.setVisibility(View.GONE);
-                            ocrDisplay.setText(response);
+                            pictureLayout.setVisibility(View.GONE);
+
                             ocrDisplay.setVisibility(View.VISIBLE);
+                            ocrText.setVisibility(View.VISIBLE);
+                            ocrLabel.setVisibility(View.VISIBLE);
+
+                            ocrText.setText(response);
 
 
                             if (snapshotPhotoMode)
@@ -338,6 +370,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     Log.i(LOG_TAG, "Error: Snapshotted photo not found");
                                 }
                             }
+
+                            UploadBtn.setEnabled(false);
 
 
 //                        } catch (JSONException e) {
@@ -371,6 +405,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         };
 
+        mloadingIndicator.setVisibility(View.VISIBLE);
         MySingleton.getInstance(MainActivity.this).addToRequestQueue(stringRequest);
 
     }
