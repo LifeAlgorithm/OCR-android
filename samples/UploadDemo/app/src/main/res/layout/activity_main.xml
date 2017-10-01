@@ -51,6 +51,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/uploadBtn"
+        tools:text="OCR Results"
+        android:layout_marginTop="10dp"
+        android:scrollbars = "vertical"
+        android:maxLines="15"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/ocrDisplay"
+        android:visibility="gone"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ocrDisplay"
         android:text="Not logged in"
         android:layout_marginTop="10dp"
         android:id="@+id/logInDisplay"/>

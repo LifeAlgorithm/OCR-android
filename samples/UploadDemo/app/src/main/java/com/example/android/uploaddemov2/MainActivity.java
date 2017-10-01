@@ -17,6 +17,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -39,9 +40,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -55,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SignInButton signInButton;
     private ImageView imgView;
     private TextView logInDisplay;
+    private TextView ocrDisplay;
 
     private final int SELECT_IMG_REQUEST = 1;
     private static final int REQUEST_TAKE_PHOTO = 9002;
@@ -88,6 +87,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         imgView = (ImageView) findViewById(R.id.imageView);
         logInDisplay = (TextView) findViewById(R.id.logInDisplay);
+        ocrDisplay = (TextView) findViewById(R.id.ocrDisplay);
+        ocrDisplay.setMovementMethod(new ScrollingMovementMethod());
 
         signInButton = (SignInButton) findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
@@ -236,6 +237,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), path);
                 imgView.setImageBitmap(mBitmap);
                 imgView.setVisibility(View.VISIBLE);
+                ocrDisplay.setVisibility(View.GONE);
                 selectedPhotoMode = true;
                 snapshotPhotoMode = false;
 
@@ -257,6 +259,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), currentPhotoUri);
                     imgView.setImageBitmap(mBitmap);
                     imgView.setVisibility(View.VISIBLE);
+                    ocrDisplay.setVisibility(View.GONE);
                     selectedPhotoMode = false;
                     snapshotPhotoMode = true;
 
@@ -309,10 +312,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onResponse(String response) {
                         try {
                             Log.i(LOG_TAG, response);
-                            JSONObject jsonObject = new JSONObject(response);
+                            //JSONObject jsonObject = new JSONObject(response); commented out until server response is configured properly
+
                             Toast.makeText(MainActivity.this, "Image uploaded to server.", Toast.LENGTH_LONG).show();
                             imgView.setImageResource(0);
                             imgView.setVisibility(View.GONE);
+                            ocrDisplay.setText(response);
+                            ocrDisplay.setVisibility(View.VISIBLE);
+
 
                             if (snapshotPhotoMode)
                             {
@@ -333,7 +340,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             }
 
 
-                        } catch (JSONException e) {
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+                        }
+                        catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
