@@ -1,19 +1,19 @@
 package com.example.android.uploaddemov2;
 
+/**
+ * Created by Armand on 10/1/2017.
+ */
+
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
-/**
- * Created by Armand on 9/24/2017.
- */
+public class LoadingDialog extends DialogFragment {
 
-public class CameraDialog extends DialogFragment {
-
-    public static CameraDialog newInstance(int title) {
-        CameraDialog frag = new CameraDialog();
+    public static LoadingDialog newInstance(int title) {
+        LoadingDialog frag = new LoadingDialog();
         Bundle args = new Bundle();
         args.putInt("title", title);
         frag.setArguments(args);

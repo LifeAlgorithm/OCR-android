@@ -27,10 +27,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -43,6 +45,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -76,8 +79,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private GoogleSignInAccount acct;
 
     //private String UploadUrl = "https://nodejs-weather-service.herokuapp.com/upload-android";
-    private String UploadUrl = "http://192.168.1.64:3000/upload-android"; //insert local host here
-
+    //private String UploadUrl = "http://192.168.1.64:3000/upload-android"; //insert local host here
+    private String UploadUrl = "http://ec2-54-241-141-153.us-west-1.compute.amazonaws.com:3000/upload-android";
 
     public static final String LOG_TAG = MainActivity.class.getName();
 
@@ -386,6 +389,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.i(LOG_TAG, "Upload failed.");
+                        Log.i(LOG_TAG, error.toString());
                     }
                 }) {
             @Override
@@ -403,9 +407,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log.i(LOG_TAG, "Response code: " + response.statusCode);
                 return super.parseNetworkResponse(response);
             }
+            @Override
+            protected VolleyError parseNetworkError(VolleyError volleyError) {
+                String json;
+                if (volleyError.networkResponse != null && volleyError.networkResponse.data != null) {
+                    try {
+                        json = new String(volleyError.networkResponse.data,
+                                HttpHeaderParser.parseCharset(volleyError.networkResponse.headers));
+                    } catch (UnsupportedEncodingException e) {
+                        return new VolleyError(e.getMessage());
+                    }
+                    return new VolleyError(json);
+                }
+                return volleyError;
+            }
         };
 
         mloadingIndicator.setVisibility(View.VISIBLE);
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(90000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
         MySingleton.getInstance(MainActivity.this).addToRequestQueue(stringRequest);
 
     }
@@ -458,7 +478,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (showCameraDialog)
         {
             showCameraDialog = false;
-            showDialog();
+            showCameraDialog();
         }
 
     }
@@ -486,21 +506,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     //Dialog
-    protected void showDialog() {
+    protected void showCameraDialog() {
         CameraDialog newFragment = CameraDialog.newInstance(
                 R.string.camera_dialog_title);
         newFragment.show(getSupportFragmentManager(), "CameraDialog");
     }
 
     @TargetApi(23)
-    public void doPositiveClick() {
+    public void doPositiveCameraClick() {
         // Do stuff here.
         Log.i("CameraDialog", "Positive click!");
         requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE);
     }
 
     @TargetApi(23)
-    public void doNegativeClick() {
+    public void doNegativeCameraClick() {
         // Do stuff here.
         Log.i("CameraDialog", "Negative click!");
     }
